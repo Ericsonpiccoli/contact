@@ -36,6 +36,14 @@ font-family: 'Open Sans', sans-serif;
 /* typography
 ==================================================*/
 
+    /* Media query per tablet e cellulari */
+    @media only screen and (max-width: 768px) {
+        .section {
+            background-attachment: scroll; /* Imposta l'immagine di sfondo a scorrimento */
+            background-position: center; /* Imposta la posizione dell'immagine di sfondo al centro */
+        }
+    }
+
 h1 {
     font-family: 'Playfair Display', serif;
     font-size: 80px;

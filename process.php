@@ -1,20 +1,43 @@
 <?php
-if(isset($_POST['submit'])) {
-    $to = "contact@ericsonpiccoli.it";
-    $from = $_POST['email'];
-    $name = $_POST['name'];
-    $headers = "From: $from";
-    $subject = "Message from $name";
+// Define variáveis e inicializa com valores vazios
+$nome = $email = $mensagem = '';
+$erro = '';
 
-    $message = "Name: $name\n";
-    $message .= "Email: $from\n";
-    $message .= "Phone: ".$_POST['phone']."\n";
-    $message .= "Message: ".$_POST['message']."\n";
+// Verifica se o formulário foi submetido
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Processa os dados do formulário
+    $nome = test_input($_POST["nome"]);
+    $email = test_input($_POST["email"]);
+    $mensagem = test_input($_POST["mensagem"]);
 
-    if(mail($to, $subject, $message, $headers)) {
-        echo '<p class="green textcenter">Your message was sent successfully! I will be in touch as soon as I can.</p>';
+    // Verifica se o e-mail é válido
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $erro = "Endereço de e-mail inválido";
     } else {
-        echo '<p>Something went wrong, try refreshing and submitting the form again.</p>';
+        // E-mail de destino
+        $destino = "contct@ericsonpiccoli.it";
+        // Assunto do e-mail
+        $assunto = "Mensagem do formulário de contato";
+
+        // Monta o corpo do e-mail
+        $corpo_email = "Nome: $nome\n";
+        $corpo_email .= "E-mail: $email\n";
+        $corpo_email .= "Mensagem:\n$mensagem";
+
+        // Envia o e-mail
+        if (mail($destino, $assunto, $corpo_email)) {
+            echo "<p>Mensagem enviada com sucesso!</p>";
+        } else {
+            echo "<p>Ocorreu um erro ao enviar a mensagem. Por favor, tente novamente mais tarde.</p>";
+        }
     }
+}
+
+// Função para validar dados do formulário
+function test_input($data) {
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
 }
 ?>

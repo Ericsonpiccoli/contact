@@ -656,6 +656,13 @@ a:active {
     #award-box .award {
         width: 100%;
     }
+    @media (max-width: 767px) {
+        .skill-item {
+          text-align: center;
+          margin-bottom: 15px;
+        }
+      }
+      
     #award-box .award,
     #award-box .award-content {
         float: right;

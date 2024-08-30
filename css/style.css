@@ -646,45 +646,62 @@ a:active {
     left: -14%;
 }
  
+/* Estilos gerais que se aplicam fora das media queries */
+#award-box .award,
+#award-box .award-content {
+    float: right;
+    padding: 5px;
+    text-align: left;
+}
+
+#award-box .award:first-child:before,
+#award-box .award:last-child:nth-child(odd):before {
+    right: auto;
+    left: -11px;
+}
+
+#award-box .award-icon {
+    right: 0;
+    left: -12px;
+}
+
+#award-box .award-content:before {
+    left: -7.3px;
+}
+
+#award-box .award-content:after {
+    left: -14%;
+}
+
+/* Estilos específicos para telas com largura de até 767px */
 @media only screen and (max-width: 767px) {
     #award-box {
         padding-left: 20px;
     }
+
     #award-box:before {
         left: 20px;
     }
+
     #award-box .award {
         width: 100%;
     }
-    @media (max-width: 767px) {
-        .skill-item {
-          text-align: center;
-          margin-bottom: 15px;
-        }
-      }
-      
-    #award-box .award,
-    #award-box .award-content {
-        float: right;
-        padding:5px;
-        text-align: left;
+
+    .skill-item {
+        text-align: center;
+        margin-bottom: 15px;
     }
-    #award-box .award:first-child:before,
-    #award-box .award:last-child:nth-child(odd):before {
-        right: auto;
-        left: -11px;
-    }
-    #award-box .award-icon {
-        right: 0;
-        left: -12px;
-    }
-    #award-box .award-content:before {
-        left: -7.3px;
-    }
-    #award-box .award-content:after {
-        left: -14%;
+
+    /* Adicionando a regra para reduzir a imagem em 70% */
+    .reduced-size {
+        width: 30%; /* Reduz a imagem para 30% da largura original */
     }
 }
+
+
+      
+   
+  
 
 /*====================================================
                    CONTACT
@@ -713,13 +730,13 @@ a:active {
     border-color: #ccc;
     border-radius: 0;
     color: #717171;
-    margin-top: 30px; 
+    margin-top: 10px; 
 }
 
 .con-form textarea {
     width: 100%; 
     height: 200px;
-    margin:30px 0;
+    margin:10px 0;
     border-color: #ccc;
     border-radius: 0;
     color: #717171;
@@ -753,7 +770,7 @@ a:active {
 
 @media(max-width: 767px){
     #contact-p2 .con-form input{
-        margin-bottom: 30px;
+        margin-bottom: 10px;
     }
     .con-form textarea {
         width: 100%; 

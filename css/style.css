@@ -9,7 +9,7 @@ body {
 
 @media (min-width: 992px) {
     body {
-        padding-top: 10;
+        padding-top: 0;
         padding-left: 17rem;
     }
 }
@@ -221,7 +221,7 @@ a:active {
                       ABOUT
 ====================================================*/
   #about {
-      background-image: url(https://cdn.pixabay.com/video/2022/08/17/128210-747086064_large.mp4); 
+      
       background-size: cover;
       background-position: center center;
       background-repeat: no-repeat;
@@ -235,7 +235,7 @@ a:active {
     position: relative;
     width: 100%;
     height: 100vh; /* Define a altura do vídeo para ocupar toda a tela */
-    overflow: hidden;
+    object-fit: cover; /* Mantém a proporção do vídeo e preenche toda a área */
 }
 
 .video-background {
@@ -244,8 +244,8 @@ a:active {
     left: 50%;
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Mantém a proporção do vídeo e preenche toda a área */
     transform: translate(-50%, -50%);
+    object-fit: cover; /* Mantém a proporção do vídeo e cobre toda a área */
     z-index: -1; /* Mantém o vídeo no fundo */
 }
 
@@ -345,21 +345,6 @@ a:active {
     #portfolio .portfolio-item {
         margin: 0 0 30px;
     }
-}
-.video-container {
-    position: relative;
-    padding-bottom: 56.25%; /* Proporção 16:9 */
-    height: 0;
-    overflow: hidden;
-    max-width: 100%;
-}
-
-.video-container iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
 }
 
 .portfolio-modal .modal-dialog {

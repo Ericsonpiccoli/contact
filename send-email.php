@@ -2,23 +2,7 @@
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require 'vendor/autoload.php'; // Carregar o autoloader do Composer
-
-// Configurações do banco de dados
-$host = 'database-1-instance-1.cncss0m4cg1u.us-east-1.rds.amazonaws.com';
-$port = '5432';
-$dbname = 'database-1';  // Nome do banco de dados
-$user = 'postgres';  // Nome de usuário do banco de dados
-$password = 'ELP0911$$';  // Senha do banco de dados
-
-// Criar a conexão com o banco de dados
-$conn = pg_connect("host=$host port=$port dbname=$dbname user=$user password=$password");
-
-if (!$conn) {
-    echo "Não foi possível conectar ao banco de dados.";
-} else {
-    echo "Conexão estabelecida com sucesso!";
-}
+require 'vendor/autoload.php'; // Certifique-se de que o PHPMailer está corretamente instalado
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Dados do formulário
@@ -32,10 +16,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     try {
         // Configuração do servidor SMTP
         $mail->isSMTP();
-        $mail->Host = 'email-smtp.us-east-1.amazonaws.com';
+        $mail->Host = 'email-smtp.us-east-1.amazonaws.com'; // Substitua pelo servidor SMTP desejado
         $mail->SMTPAuth = true;
-        $mail->Username = 'AKIAIEXAMPLE'; // Substitua pelo seu nome de usuário SMTP do Amazon SES
-        $mail->Password = 'YOUR_ACTUAL_SMTP_PASSWORD'; // Substitua pela sua senha SMTP do Amazon SES
+        $mail->Username = 'AKIAIEXAMPLE'; // Substitua pelo seu nome de usuário SMTP
+        $mail->Password = 'YOUR_ACTUAL_SMTP_PASSWORD'; // Substitua pela sua senha SMTP
         $mail->SMTPSecure = 'tls'; // Pode ser 'tls' ou 'ssl'
         $mail->Port = 587; // Pode ser 25, 587 ou 2587
 
@@ -46,11 +30,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Conteúdo do e-mail
         $mail->isHTML(true);
         $mail->Subject = $subject;
-        $mail->Body    = "<h2>Contact Form Submission</h2>
-                          <p><strong>Name:</strong> $fullName</p>
+        $mail->Body    = "<h2>Contato do Formulário</h2>
+                          <p><strong>Nome:</strong> $fullName</p>
                           <p><strong>Email:</strong> $email</p>
-                          <p><strong>Subject:</strong> $subject</p>
-                          <p><strong>Message:</strong><br>$message</p>";
+                          <p><strong>Assunto:</strong> $subject</p>
+                          <p><strong>Mensagem:</strong><br>$message</p>";
 
         // Enviar o e-mail
         $mail->send();

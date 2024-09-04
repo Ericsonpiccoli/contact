@@ -628,23 +628,28 @@
               <h3>Contattami</h3>
               <div class="heading-border-light"></div>
                 <p> Se sei alla ricerca di un professionista affidabile e competente per il tuo prossimo progetto, non esitare a contattarmi. Sono disponibile per discutere delle tue esigenze e offrirti soluzioni personalizzate che soddisfano le tue aspettative. Che si tratti di sviluppare un sito web, ottimizzare il design o affrontare sfide tecniche, sono qui per aiutarti a raggiungere i tuoi obiettivi. Contattami oggi stesso e iniziamo a lavorare insieme!</p>  </div>   
-            <div class="row con-form">
-              <div class="col-md-12">
-                <input type="text" name="full-name" placeholder="Full Name" class="form-control">
-              </div>
-              <div class="col-md-12">
-                <input type="text" name="email" placeholder="Email Id" class="form-control">
-              </div>
-              <div class="col-md-12">
-                <input type="text" name="subject" placeholder="Subject" class="form-control">
-              </div>
-              <div class="col-md-12"><textarea name="" id=""></textarea></div>
-              <div class="col-md-12 sub-but">
-                <a href="https://wa.me/393501021359" class="btn btn-general btn-white" role="button">Send</a>
+                <div class="row con-form">
+                    <div class="col-md-12">
+                        <form action="seu_script.php" method="post">
+                            <div class="form-group">
+                                <input type="text" name="full_name" placeholder="Nome e Cognome" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="email" name="email" placeholder="Email" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" name="subject" placeholder="Oggetto" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <textarea name="message" placeholder="Messaggio" class="form-control" rows="6" required></textarea>
+                            </div>
+                            <div class="col-md-12 sub-but">
+                                <button type="submit" class="btn btn-general btn-white">Invia</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
-            
-            </div>
-          </div>
           <div class="col-md-4 col-sm-12 mt-5"> 
             <div class="contact-cont2"> 
               <div class="contact-add contact-box-desc">

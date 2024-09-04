@@ -2,8 +2,23 @@
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require 'vendor/autoload.php'; // Certifique-se de que o PHPMailer está corretamente instalado
+require 'vendor/autoload.php';
 
+// Dados de conexão com o banco de dados
+$servername = "ericson.cluster-cvw8ew4si500.eu-north-1.rds.amazonaws.com";
+$username = "admin";
+$password = "Elp030292$$";
+$dbname = "ericson"; // Nome do seu banco de dados
+
+// Criar conexão
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Verificar conexão
+if ($conn->connect_error) {
+    die("Conexão falhou: " . $conn->connect_error);
+}
+
+// Verificar se a solicitação é POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Dados do formulário
     $fullName = htmlspecialchars($_POST['full_name']);
@@ -11,23 +26,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $subject = htmlspecialchars($_POST['subject']);
     $message = htmlspecialchars($_POST['message']);
 
+    // Inserir dados no banco de dados
+    $stmt = $conn->prepare("INSERT INTO contatos (full_name, email, subject, message) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("ssss", $fullName, $email, $subject, $message);
+    
+    if ($stmt->execute()) {
+        echo "Dados inseridos com sucesso!";
+    } else {
+        echo "Erro ao inserir dados: " . $stmt->error;
+    }
+
+    // Fechar declaração e conexão
+    $stmt->close();
+    $conn->close();
+
+    // Configuração do servidor SMTP
     $mail = new PHPMailer(true);
 
     try {
-        // Configuração do servidor SMTP
+        // Enviar e-mail para o administrador
         $mail->isSMTP();
-        $mail->Host = 'email-smtp.us-east-1.amazonaws.com'; // Substitua pelo servidor SMTP desejado
+        $mail->Host = 'email-smtp.us-east-1.amazonaws.com'; // Servidor SMTP do Amazon SES
         $mail->SMTPAuth = true;
-        $mail->Username = 'AKIAIEXAMPLE'; // Substitua pelo seu nome de usuário SMTP
-        $mail->Password = 'YOUR_ACTUAL_SMTP_PASSWORD'; // Substitua pela sua senha SMTP
-        $mail->SMTPSecure = 'tls'; // Pode ser 'tls' ou 'ssl'
-        $mail->Port = 587; // Pode ser 25, 587 ou 2587
+        $mail->Username = 'AKIA6D6JBNZUFAJGW6GV'; // Seu nome de usuário SMTP
+        $mail->Password = 'BKrpzA278ao4x0bj8EpgSXoRc5wb6CVNJmSZHFDlgi9U'; // Sua senha SMTP
+        $mail->SMTPSecure = 'tls'; // Use 'tls' ou 'ssl'
+        $mail->Port = 587; // Ou 465 para 'ssl'
 
         // Remetente e destinatário
-        $mail->setFrom('contact@ericsonpiccoli.it', 'Your Name');
+        $mail->setFrom('contact@ericsonpiccoli.it', 'Ericson Piccoli');
         $mail->addAddress('contact@ericsonpiccoli.it'); // Seu e-mail
 
-        // Conteúdo do e-mail
+        // Conteúdo do e-mail do administrador
         $mail->isHTML(true);
         $mail->Subject = $subject;
         $mail->Body    = "<h2>Contato do Formulário</h2>
@@ -36,9 +66,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                           <p><strong>Assunto:</strong> $subject</p>
                           <p><strong>Mensagem:</strong><br>$message</p>";
 
-        // Enviar o e-mail
+        // Enviar o e-mail para o administrador
         $mail->send();
         echo 'Mensagem enviada com sucesso!';
+
+        // Enviar resposta automática para o usuário
+        $mail->clearAddresses();
+        $mail->addAddress($email); // Endereço do usuário
+
+        $mail->Subject = 'Grazie per averci contattato';
+        $mail->Body    = "<p>Grazie per averci contattato attraverso il nostro sito!</p>
+                          <p>Abbiamo ricevuto il tuo messaggio e le tue informazioni sono state registrate con successo. Ti risponderemo al più presto all'indirizzo email fornito.</p>
+                          <p>Per ulteriori informazioni o assistenza, puoi contattarci al telefono o via WhatsApp al +393501021359.</p>
+                          <p>Visita il nostro sito web: <a href='http://www.ericsonpiccoli.it'>www.ericsonpiccoli.it</a></p>
+                          <p>Grazie per il tuo contatto e per la tua pazienza.</p>
+                          <p>Cordiali saluti,<br>Ericson Piccoli</p>";
+
+        // Enviar a resposta automática
+        $mail->send();
+        echo 'Risposta automatica inviata con successo!';
     } catch (Exception $e) {
         echo "Mensagem não pôde ser enviada. Erro do Mailer: {$mail->ErrorInfo}";
     }

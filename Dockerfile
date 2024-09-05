@@ -1,17 +1,16 @@
-# Use a imagem base
-FROM ubuntu:latest
+# Usar a imagem base do PHP com Apache
+FROM php:7.4-apache
 
-# Instale o Git e o SSH
-RUN apt-get update && \
-    apt-get install -y git openssh-client && \
-    apt-get clean
+# Instalar extensões necessárias
+RUN docker-php-ext-install mysqli pdo pdo_mysql
 
-# Adicione o diretório .ssh
-RUN mkdir -p /root/.ssh && \
-    chmod 700 /root/.ssh
+# Copiar arquivos do projeto para o diretório padrão do Apache
+COPY . /var/www/html/
 
-# Adicione o GitHub ao known_hosts
-RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
+# Configura permissões e propriedade
+RUN chown -R www-data:www-data /var/www/html
+RUN chmod -R 755 /var/www/html
 
-# Clone o repositório
-RUN git clone git@github.com:Ericsonpiccoli/contact.git
+# Expor a porta 80 para o Apache
+EXPOSE 80
+

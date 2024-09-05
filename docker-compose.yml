@@ -5,3 +5,12 @@ services:
       context: .
       ssh:
         - default
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    container_name: contact_site

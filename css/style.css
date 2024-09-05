@@ -221,7 +221,7 @@ a:active {
                       ABOUT
 ====================================================*/
   #about {
-      
+      background-image: url(https://cdn.pixabay.com/video/2022/08/17/128210-747086064_large.mp4); 
       background-size: cover;
       background-position: center center;
       background-repeat: no-repeat;

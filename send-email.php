@@ -5,10 +5,10 @@ use PHPMailer\PHPMailer\Exception;
 require 'vendor/autoload.php';
 
 // Dados de conexão com o banco de dados
-$servername = "ericson-instance-1.cvw8ew4si500.eu-north-1.rds.amazonaws.com";
+$servername = "";
 $username = "admin";
-$password = "Elp030292$$";
-$dbname = "Ericson"; // Nome do seu banco de dados
+$password = "";
+$dbname = ""; // Nome do seu banco de dados
 
 // Criar conexão
 $conn = new mysqli($servername, $username, $password, $dbname);

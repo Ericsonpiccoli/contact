@@ -8,14 +8,20 @@ Este projeto utiliza Docker e GitHub Actions para automatizar o deployment em um
 
 1. **Clone o repositório:**
 
+    Com a GitHub CLI:
     ```bash
-    git clone https://github.com/seuusuario/seurepositorio.git
+    gh repo clone Ericsonpiccoli/contact
+    ```
+
+    Ou usando Git:
+    ```bash
+    git clone git@github.com:Ericsonpiccoli/contact.git
     ```
 
 2. **Navegue para o diretório do projeto:**
 
     ```bash
-    cd seu-repositorio
+    cd contact
     ```
 
 3. **Construa e inicie os containers Docker:**
@@ -26,8 +32,8 @@ Este projeto utiliza Docker e GitHub Actions para automatizar o deployment em um
 
 4. **Acesse a aplicação:**
 
-    - A aplicação PHP estará disponível em `http://localhost`
-    - A aplicação Node.js estará disponível em `http://localhost:3000`
+    - A aplicação PHP estará disponível em [http://localhost](http://localhost)
+    - A aplicação Node.js estará disponível em [http://localhost:3000](http://localhost:3000)
 
 ## Variáveis de Ambiente
 

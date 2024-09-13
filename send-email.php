@@ -1,27 +1,18 @@
-
 <?php
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require 'vendor/autoload.php';
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
-// Dados de conexão com o banco de dados
-$servername = "";
-$username = "admin";
-$password = "";
-$dbname = ""; // Nome do seu banco de dados
+// Carregar o autoload do Composer
+require '/var/www/html/vendor/autoload.php';
 
-// Criar conexão
-$conn = new mysqli($servername, $username, $password, $dbname);
+// Carregar configurações
+$emailConfig = require '/var/www/config/config.php';
 
-// Verificar conexão
-if ($conn->connect_error) {
-    die("Conexão falhou: " . $conn->connect_error);
-}
-
-// Verificar se a solicitação é POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Dados do formulário
     $fullName = htmlspecialchars($_POST['full_name']);
     $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL) ? htmlspecialchars($_POST['email']) : '';
     $subject = htmlspecialchars($_POST['subject']);
@@ -31,36 +22,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("Endereço de e-mail inválido.");
     }
 
-    // Inserir dados no banco de dados
-    $stmt = $conn->prepare("INSERT INTO contatos (full_name, email, subject, message) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssss", $fullName, $email, $subject, $message);
-    
-    if ($stmt->execute()) {
-        echo "Dados inseridos com sucesso!";
-    } else {
-        error_log("Erro ao inserir dados: " . $stmt->error);
-        echo "Erro ao inserir dados.";
-    }
-
-    // Fechar declaração e conexão
-    $stmt->close();
-    $conn->close();
-
-    // Configuração do servidor SMTP
     $mail = new PHPMailer(true);
 
     try {
-        // Enviar e-mail para o administrador
+        // Configurações do servidor SMTP
         $mail->isSMTP();
-        $mail->Host = 'email-smtp.us-east-1.amazonaws.com';
+        $mail->Host = $emailConfig['smtp_host'];
         $mail->SMTPAuth = true;
-        $mail->Username = 'AKIA6D6JBNZUFAJGW6GV';
-        $mail->Password = 'BKrpzA278ao4x0bj8EpgSXoRc5wb6CVNJmSZHFDlgi9U';
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; 
-        $mail->Port = 587;
+        $mail->Username = $emailConfig['smtp_username'];
+        $mail->Password = $emailConfig['smtp_password'];
+        $mail->SMTPSecure = $emailConfig['smtp_secure'] === 'ssl' ? PHPMailer::ENCRYPTION_SMTPS : PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = $emailConfig['smtp_port'];
 
-        $mail->setFrom('contact@ericsonpiccoli.it', 'Ericson Piccoli');
-        $mail->addAddress('contact@ericsonpiccoli.it');
+        // Enviar e-mail para o administrador
+        $mail->setFrom($emailConfig['from_email'], $emailConfig['from_name']);
+        $mail->addAddress($emailConfig['from_email']); // Adicionar destinatário (administrador)
 
         $mail->isHTML(true);
         $mail->Subject = $subject;
@@ -71,7 +47,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                           <p><strong>Mensagem:</strong><br>$message</p>";
 
         $mail->send();
-        echo 'Mensagem enviada com sucesso!';
 
         // Enviar resposta automática para o usuário
         $mail->clearAddresses();
@@ -79,19 +54,70 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $mail->Subject = 'Grazie per averci contattato';
         $mail->Body    = "<p>Grazie per averci contattato attraverso il nostro sito!</p>
-                          <p>Abbiamo ricevuto il tuo messaggio e le tue informazioni sono state registrate con successo. Ti risponderemo al più presto all'indirizzo email fornito.</p>
+                          <p>Abbiamo ricevuto il tuo messaggio e le tue informazioni sono state registrate con successo. Ti risponderemo al più presto all'indirizzo email fornito.</p>  
                           <p>Per ulteriori informazioni o assistenza, puoi contattarci al telefono o via WhatsApp al +393501021359.</p>
                           <p>Visita il nostro sito web: <a href='http://www.ericsonpiccoli.it'>www.ericsonpiccoli.it</a></p>
                           <p>Grazie per il tuo contatto e per la tua pazienza.</p>
                           <p>Cordiali saluti,<br>Ericson Piccoli</p>";
 
         $mail->send();
-        echo 'Risposta automatica inviata com sucesso!';
+
+        // Exibir mensagem de sucesso
+        echo '<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Ericson Piccoli</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700&family=Rubik:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="/Mailler-1.0.0/lib/animate/animate.min.css" rel="stylesheet">
+    <link href="/Mailler-1.0.0/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="/Mailler-1.0.0/lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="/Mailler-1.0.0/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="/Mailler-1.0.0/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container-fluid header position-relative overflow-hidden p-0">
+        <div class="hero-header overflow-hidden px-5">
+            <div class="rotate-img">
+                <img src="/Mailler-1.0.0/img/sty-1.png" class="img-fluid w-100" alt="">
+                <div class="rotate-sty-2"></div>
+            </div>
+            <div class="row gy-5 align-items-center">
+                <div class="col-lg-6 wow fadeInLeft" data-wow-delay="0.1s">
+                    <h1 class="display-4 text-dark mb-4 wow fadeInUp" data-wow-delay="0.3s">Grazie per averci Contattato!</h1>
+                    <p class="fs-4 mb-4 wow fadeInUp" data-wow-delay="0.5s">Grazie per averci contattato per richiedere i miei servizi di programmazione web! Ti risponderemo presto per discutere i dettagli. Clicca sul pulsante "Torna" per tornare alla pagina iniziale.</p>
+                    <a href="/index.html" class="btn btn-primary rounded-pill py-3 px-5 wow fadeInUp" data-wow-delay="0.7s">Torna</a>
+                </div>
+                <div class="col-lg-6 wow fadeInRight" data-wow-delay="0.2s">
+                    <img src="/Mailler-1.0.0/img/hero-img-1.png" class="img-fluid w-100 h-100" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>';
     } catch (Exception $e) {
-        error_log("Mensagem não pôde ser enviada. Erro do Mailer: {$mail->ErrorInfo}");
-        echo "Mensagem não pôde ser enviada.";
+        echo "Erro ao enviar e-mail: {$mail->ErrorInfo}";
     }
 } else {
-    echo "Solicitação inválida.";
+    echo "Método de solicitação inválido.";
 }
 ?>

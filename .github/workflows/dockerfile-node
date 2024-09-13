@@ -1,0 +1,16 @@
+# Usando uma imagem base oficial do Node.js
+FROM node:18
+
+# Definir diretório de trabalho
+WORKDIR /usr/src/app
+
+# Copiar arquivos de configuração e código
+COPY src/node/package*.json ./
+RUN npm install
+COPY src/node/ .
+
+# Expôr a porta que o app vai rodar
+EXPOSE 3000
+
+# Comando para rodar a aplicação
+CMD [ "npm", "start" ]
